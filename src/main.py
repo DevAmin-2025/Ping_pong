@@ -7,6 +7,11 @@ from src.config import *
 pygame.init()
 
 class PingPong:
+    """
+    A class to represent a Ping Pong game using Pygame.
+
+    :param screen: A Pygame surface object used for rendering the game.
+    """
     def __init__(self, screen):
         self.screen = screen
         self.paddle1 = pygame.Rect(PADDLE1_X, paddle_y, PADDLE_WIDTH, PADDLE_HEIGHT)
@@ -23,11 +28,20 @@ class PingPong:
         self.exit_time = self.set_mode()
 
     def draw_objects(self):
+        """
+        Draw paddles and ball on the screen.
+        """
         pygame.draw.rect(self.screen, RED, self.paddle1)
         pygame.draw.rect(self.screen, RED, self.paddle2)
         pygame.draw.ellipse(self.screen, BLUE, self.ball)
 
     def move_paddle(self):
+        """
+        Handle paddle movements based on user input.
+
+        - Paddle 1 (controlled by arrow keys).
+        - Paddle 2 (controlled by 'W' and 'S' keys).
+        """
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             self.paddle1.top -= PADDLE_SPEED
@@ -49,12 +63,24 @@ class PingPong:
         elif self.paddle2.bottom >= SCREEN_HEIGHT:
             self.paddle2.bottom = SCREEN_HEIGHT
 
-    def check_collision(self, paddle, ball):
+    def check_collision(self, paddle, ball) -> bool:
+        """
+        Check if the ball collides with a paddle.
+
+        :param paddle: The paddle rectangle.
+        :param ball: The ball rectangle.
+        :return: True if the ball collides with the paddle, False otherwise.
+        """
         if ball.colliderect(paddle):
             return True
         return False
 
-    def reset_ball_position(self):
+    def reset_ball_position(self) -> int:
+        """
+        Reset the ball's position after each round and assign a random initial direction.
+
+        :return: The ball's horizontal velocity (dx).
+        """
         # Randomly select the ball position after each round
         side = random.choice(['Left', 'Right'])
         if side == 'Left':
@@ -67,16 +93,25 @@ class PingPong:
         return self.ball_dx
 
     def reset_paddle_position(self):
+        """
+        Reset the paddles to their initial positions (center of the screen).
+        """
         self.paddle1.y = (SCREEN_HEIGHT // 2) - (PADDLE_HEIGHT // 2)
         self.paddle2.y = (SCREEN_HEIGHT // 2) - (PADDLE_HEIGHT // 2)
 
     def show_scores(self):
+        """
+        Display the scores of both players on the screen.
+        """
         first_score = self.primary_font.render(f'{player1_name}: {self.score1}', True, GREEN)
         second_score = self.primary_font.render(f'{player2_name}: {self.score2}', True, GREEN)
         self.screen.blit(first_score, (10, 10))
         self.screen.blit(second_score, (SCREEN_WIDTH - (second_score.get_width() + 10), 10))
 
     def show_game_over_message(self):
+        """
+        Display a "Game Over" message along with the final scores of both players.
+        """
         game_over_font = pygame.font.Font(None, 52)
         message = game_over_font.render('Game Over', True, RED)
         show_score1 = self.primary_font.render(f'Player {player1_name}: {self.score1}', True, BLUE)
@@ -94,7 +129,12 @@ class PingPong:
             (SCREEN_WIDTH // 2 - show_score2.get_width() // 2, SCREEN_HEIGHT // 2 + message.get_height() + 50)
         )
 
-    def set_mode(self):
+    def set_mode(self) -> int:
+        """
+        Prompt the user to choose between Light and Dark mode at the start of the game.
+
+        :return: The timestamp (in milliseconds) when the mode selection process ends.
+        """
         exit_set_mode_function_time = None
         inner_running = True
         while inner_running:
@@ -121,6 +161,9 @@ class PingPong:
         return exit_set_mode_function_time
 
     def play(self):
+        """
+        The main game loop to handle gameplay, user inputs, collisions, and rendering.
+        """
         ball_speed_increase = 0.15
         target_round = 3
         ball_in_motion = True
