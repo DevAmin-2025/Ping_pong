@@ -25,7 +25,8 @@ Welcome to the Ping Pong Game! This project is a fun and interactive implementat
 Ping_pong/
 ├── src/ # Source code files.
 │    ├── config.py # Configuration settings for the project.
-│    └── main.py # Main script for the game logic.
+│    ├── main.py # Main access point to the program.
+│    └── ping_pong.py # Main script for the game logic.
 ├── .gitignore # Specifies files and directories to ignore in Git.
 ├── LICENSE # License information for the project.
 ├── README.md # Documentation and overview of the project.
